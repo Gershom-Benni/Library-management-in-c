@@ -1,0 +1,178 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+#define MAX_USERS 100
+#define MAX_USERNAME_LENGTH 20
+#define MAX_PASSWORD_LENGTH 20
+#define MAX_BOOKS 100
+#define MAX_BOOK_TITLE 50
+
+struct user_details
+{
+    char username[MAX_USERNAME_LENGTH];
+    char password[MAX_PASSWORD_LENGTH];
+};
+
+struct book_details
+{
+    char title[MAX_BOOK_TITLE];
+    bool available;
+};
+
+struct user_details users[MAX_USERS];
+struct book_details books[MAX_BOOKS];
+int num_books = 0;
+int num_users = 0;
+
+void createaccount()
+{
+    if (num_users == MAX_USERS)
+    {
+        printf("Max Number of users Reached!");
+        return;
+    }
+
+    struct user_details newuser;
+    printf("Create your UserName : ");
+    scanf("%s", newuser.username);
+    printf("Create Your Password : ");
+    scanf("%s", newuser.password);
+    users[num_users++] = newuser;
+
+    printf("******************************\n");
+    printf("Account Created Successfully!\n");
+    printf("******************************\n");
+}
+
+bool login()
+{
+    char user_name[MAX_USERNAME_LENGTH];
+    char pass_word[MAX_PASSWORD_LENGTH];
+    printf("Enter your username : ");
+    scanf("%s", user_name);
+    printf("Enter your Password : ");
+    scanf("%s", pass_word);
+
+    for (int i = 0; i < num_users; i++)
+    {
+        if (strcmp(user_name, users[i].username) == 0 && strcmp(pass_word, users[i].password) == 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void addbooks()
+{
+    if (num_books == MAX_BOOKS)
+    {
+        printf("Maximum Number of Books Reached");
+        return;
+    }
+
+    struct book_details newbook;
+    printf("Enter the book Title : ");
+    scanf(" %[^\n]", newbook.title);
+    
+
+    newbook.available = true;
+    books[num_books++] = newbook;
+
+    printf("*****************************");
+    printf("New Book Added successfully !");
+    printf("*****************************");
+}
+
+void borrowbooks()
+{
+    char title[MAX_BOOK_TITLE];
+    printf("Enter the title of the book you want to borrow : ");
+     scanf(" %[^\n]", title);
+   
+    for (int i = 0; i < num_books; i++)
+    {
+        if (strcmp(title, books[i].title) == 0)
+        {
+            if (books[i].available)
+            {
+                books[i].available = false;
+                printf("****************************");
+                printf("Book Borrowed Successfully !\n");
+                printf("****************************");
+            }
+            else
+            {
+                printf("The book is not currently available for borrowing !\n");
+            }
+        }
+       
+    } return;
+}
+void print_available_books()
+{
+    printf("Available Books\n");
+    for (int i = 0; i < num_books; i++)
+    {
+        if (books[i].available)
+        {
+            printf("%s\n", books[i].title);
+        }
+    }
+}
+
+int main()
+{
+    int choice;
+    while (true)
+    {
+        printf("1) Create an Account\n");
+        printf("2) Login\n");
+        printf("3) Add Books\n");
+        printf("4) view Available Books\n");
+        printf("5) Borrow Books\n");
+        printf("6) Exit\n");
+        printf("Enter Your choice\n");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            createaccount();
+            break;
+        case 2:
+            if (login())
+            {
+                printf("*******************\n");
+                printf("Login successful\n");
+                printf("*******************\n");
+            }
+            else
+            {
+                printf("***************************************************\n");
+                printf("Invalid username or Password! please try again!\n");
+                printf("***************************************************\n");
+            }
+            break;
+        case 3:
+            addbooks();
+            break;
+        case 4:
+            print_available_books();
+            break;
+        case 5:
+            borrowbooks();
+            break;
+        case 6:
+            return 0;
+        default:
+            printf("Invalid choice! Try again!\n");
+            break;
+        }
+
+        printf("\n");
+    }
+
+    return 0;
+}
+
